@@ -15,8 +15,8 @@ public class MainTask {
     private static final String PATH_TO_GENERAL_DIRECTORY = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
     private static File mainTaskData = new File(PATH_TO_GENERAL_DIRECTORY + File.separator + "MainTaskData");
     private static String mainTaskDataPath = mainTaskData.getPath();
-    private static final String ADDITION_LINES_FOR_DIRECTORY_LINES = "  |----";
-    private static final String ADDITION_LINES_FOR_FILE_LINES = "  |    ";
+    private static final String ADDITIONAL_CHARS_FOR_DIRECTORY_LINES = "  |----";
+    private static final String ADDITIONAL_CHARS_FOR_FILE_LINES = "  |    ";
     private static DecimalFormat formattedDouble = new DecimalFormat("#0");
 
     public static void main(String[] args) {
@@ -30,9 +30,9 @@ public class MainTask {
                         .skip(1)
                         .forEach(file -> {
                             if (file.isDirectory()) {
-                                writeDataToFile(ADDITION_LINES_FOR_DIRECTORY_LINES + file.getName(), mainTaskDataPath);
+                                writeDataToFile(ADDITIONAL_CHARS_FOR_DIRECTORY_LINES + file.getName(), mainTaskDataPath);
                             } else {
-                                writeDataToFile(ADDITION_LINES_FOR_FILE_LINES + file.getName(), mainTaskDataPath);
+                                writeDataToFile(ADDITIONAL_CHARS_FOR_FILE_LINES + file.getName(), mainTaskDataPath);
                             }
                         });
             } catch (IOException e) {
@@ -71,10 +71,10 @@ public class MainTask {
 
     private static void calcSomeFileInfo(List<String> dataFromFile) {
         int averageAmountOfFilesPerFolder = 0;
-        int amountOfFolders = (int) dataFromFile.stream().filter(line -> !line.contains(ADDITION_LINES_FOR_FILE_LINES)).count();
-        int amountOfFiles = (int) dataFromFile.stream().filter(line -> line.contains(ADDITION_LINES_FOR_FILE_LINES)).count();
+        int amountOfFolders = (int) dataFromFile.stream().filter(line -> !line.contains(ADDITIONAL_CHARS_FOR_FILE_LINES)).count();
+        int amountOfFiles = (int) dataFromFile.stream().filter(line -> line.contains(ADDITIONAL_CHARS_FOR_FILE_LINES)).count();
         double averageFileNameLength = dataFromFile.stream()
-                .mapToInt(s -> s.length() - ADDITION_LINES_FOR_FILE_LINES.length()).average().orElseThrow(NullPointerException::new);
+                .mapToInt(s -> s.length() - ADDITIONAL_CHARS_FOR_FILE_LINES.length()).average().orElseThrow(NullPointerException::new);
         if (amountOfFiles != 0) {
             averageAmountOfFilesPerFolder = amountOfFiles / amountOfFolders;
         }
