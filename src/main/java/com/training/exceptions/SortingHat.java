@@ -76,7 +76,7 @@ public class SortingHat {
                 } else throw new GradeIsOutOfRangeException();
             }
             randomGrades.put(subject.getStudySubjectsName(), randomGradesValues);
-        } //exception если студент не принадлежит к факультету
+        }
         if (randomGrades.keySet().isEmpty()) {
             throw new StudentHasNoStudySubjectException();
         }
