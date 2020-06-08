@@ -4,6 +4,9 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -14,6 +17,7 @@ public class MainTask {
     private static String mainTaskDataPath = mainTaskData.getPath();
     private static final String ADDITION_LINES_FOR_DIRECTORY_LINES = "  |----";
     private static final String ADDITION_LINES_FOR_FILE_LINES = "  |    ";
+    private static DecimalFormat formattedDouble = new DecimalFormat("#0");
 
     public static void main(String[] args) {
         File commandLineArgument = new File(args[0]);
@@ -36,6 +40,8 @@ public class MainTask {
             } catch (IOException e) {
                 LOGGER.warning(String.valueOf(e));
             }
+        } else {
+            calcSomeFileInfo(getDataFromFile(commandLineArgument));
         }
     }
 
@@ -46,5 +52,31 @@ public class MainTask {
         } catch (IOException e) {
             LOGGER.warning(String.valueOf(e));
         }
+    }
+
+    private static List<String> getDataFromFile(File file) {
+        List<String> dataFromFile = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            reader.lines().forEach(dataFromFile::add);
+        } catch (FileNotFoundException e) {
+            LOGGER.warning(String.valueOf(e));
+        } catch (IOException e) {
+            LOGGER.warning(String.valueOf(e));
+        }
+        return dataFromFile;
+    }
+
+    private static void calcSomeFileInfo(List<String> dataFromFile) {
+        int averageAmountOfFilesPerFolder = 0;
+        int amountOfFolders = (int) dataFromFile.stream().filter(line -> !line.contains(ADDITION_LINES_FOR_FILE_LINES)).count();
+        int amountOfFiles = (int) dataFromFile.stream().filter(line -> line.contains(ADDITION_LINES_FOR_FILE_LINES)).count();
+        double averageFileNameLength = dataFromFile.stream().mapToInt(s -> s.length() - 7).average().orElseThrow(NullPointerException::new);
+        if (amountOfFiles != 0) {
+            averageAmountOfFilesPerFolder = amountOfFiles / amountOfFolders;
+        }
+        String message = "В данной директории находится : " + amountOfFolders + " папок, " + amountOfFiles + " файлов, " +
+                "\n Среднее количество файлов в папке = " + averageAmountOfFilesPerFolder +
+                ".\n Средняя длина названия файла = " + formattedDouble.format(averageFileNameLength) + " символ(ов).";
+        LOGGER.info(message);
     }
 }
