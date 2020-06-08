@@ -41,7 +41,7 @@ public class MainTask {
         } else {
             LOGGER.warning("Path is incorrect");
         }
-        if (commandLineArgumentWithDirectoryPath.exists()) {
+        if (commandLineArgumentWithDataFilePath.exists()) {
             calcSomeFileInfo(getDataFromFile(commandLineArgumentWithDataFilePath));
         } else {
             LOGGER.warning("File isn't exist");
