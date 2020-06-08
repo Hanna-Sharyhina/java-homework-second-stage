@@ -20,13 +20,11 @@ public class MainTask {
     private static DecimalFormat formattedDouble = new DecimalFormat("#0");
 
     public static void main(String[] args) {
-        File commandLineArgument = new File(args[0]);
-        if (!commandLineArgument.exists()) {
-            LOGGER.warning("Path is incorrect");
-        }
-        if (commandLineArgument.isDirectory()) {
-            writeDataToFile(commandLineArgument.getName(), mainTaskDataPath);
-            try (Stream<Path> filePathStream = Files.walk(Paths.get(commandLineArgument.getPath()))) {
+        File commandLineArgumentWithDirectoryPath = new File(args[0]);
+        File commandLineArgumentWithDataFilePath = new File(args[1]);
+        if (commandLineArgumentWithDirectoryPath.exists()) {
+            try (Stream<Path> filePathStream = Files.walk(Paths.get(commandLineArgumentWithDirectoryPath.getPath()))) {
+                writeDataToFile(commandLineArgumentWithDirectoryPath.getName(), mainTaskDataPath);
                 filePathStream
                         .map(Path::toFile)
                         .skip(1)
@@ -41,7 +39,12 @@ public class MainTask {
                 LOGGER.warning(String.valueOf(e));
             }
         } else {
-            calcSomeFileInfo(getDataFromFile(commandLineArgument));
+            LOGGER.warning("Path is incorrect");
+        }
+        if (commandLineArgumentWithDirectoryPath.exists()) {
+            calcSomeFileInfo(getDataFromFile(commandLineArgumentWithDataFilePath));
+        } else {
+            LOGGER.warning("File isn't exist");
         }
     }
 
@@ -70,13 +73,14 @@ public class MainTask {
         int averageAmountOfFilesPerFolder = 0;
         int amountOfFolders = (int) dataFromFile.stream().filter(line -> !line.contains(ADDITION_LINES_FOR_FILE_LINES)).count();
         int amountOfFiles = (int) dataFromFile.stream().filter(line -> line.contains(ADDITION_LINES_FOR_FILE_LINES)).count();
-        double averageFileNameLength = dataFromFile.stream().mapToInt(s -> s.length() - 7).average().orElseThrow(NullPointerException::new);
+        double averageFileNameLength = dataFromFile.stream()
+                .mapToInt(s -> s.length() - ADDITION_LINES_FOR_FILE_LINES.length()).average().orElseThrow(NullPointerException::new);
         if (amountOfFiles != 0) {
             averageAmountOfFilesPerFolder = amountOfFiles / amountOfFolders;
         }
         String message = "В данной директории находится : " + amountOfFolders + " папок, " + amountOfFiles + " файлов, " +
                 "\n Среднее количество файлов в папке = " + averageAmountOfFilesPerFolder +
-                ".\n Средняя длина названия файла = " + formattedDouble.format(averageFileNameLength) + " символ(ов).";
+                ".\n Средняя длина названия файла = " + formattedDouble.format(averageFileNameLength) + " символ(а/ов).";
         LOGGER.info(message);
     }
 }
