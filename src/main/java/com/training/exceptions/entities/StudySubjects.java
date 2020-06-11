@@ -1,12 +1,12 @@
 package com.training.exceptions.entities;
 
 public enum StudySubjects {
-    CHARMS("Заклинания"),
-    HISTORY_OF_MAGIC("История магии"),
-    TRANSFIGURATION("Трансфигурация"),
-    DEFENCE_AGAINST_THE_DARK_ARTS("Защита от темных искусств"),
-    POTIONS("Зельеварение"),
-    HERBOLOGY("Травология");
+    CHARMS("Charms"),
+    HISTORY_OF_MAGIC("History of magic"),
+    TRANSFIGURATION("Transfiguration"),
+    DEFENCE_AGAINST_THE_DARK_ARTS("Defence against the dark arts"),
+    POTIONS("Potions"),
+    HERBOLOGY("Herbology");
 
     private String studySubjectsName;
 

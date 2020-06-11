@@ -40,8 +40,8 @@ public class Faculty {
 
     @Override
     public String toString() {
-        return "Факультет: " + name.getFacultyName() + ",\n" +
-                " группы: \n" + groups +
+        return "Faculty: " + name.getFacultyName() + ",\n" +
+                " groups: \n" + groups +
                 '}';
     }
 }

@@ -1,10 +1,10 @@
 package com.training.exceptions.entities;
 
 public enum FacultyNames {
-    SLYTHERIN("Слизерин"),
-    HUFFLEPUFF("Пуфендуй"),
-    RAVENCLAW("Когтевран"),
-    GRYFFINDOR("Гриффиндор");
+    SLYTHERIN("Slytherin"),
+    HUFFLEPUFF("Hufflepuff"),
+    RAVENCLAW("Ravenclaw"),
+    GRYFFINDOR("Griffindor");
 
     private String facultyName;
 

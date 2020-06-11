@@ -19,6 +19,6 @@ public class FacultyHasNoGroupException extends Exception {
 
     @Override
     public String toString() {
-        return "На факультете отсутствуют группы! ";
+        return "A faculty has no groups! ";
     }
 }

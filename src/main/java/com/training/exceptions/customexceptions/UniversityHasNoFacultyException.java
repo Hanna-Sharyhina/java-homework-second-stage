@@ -19,6 +19,6 @@ public class UniversityHasNoFacultyException extends Exception {
 
     @Override
     public String toString() {
-        return "В университете отсутствуют факультеты! ";
+        return "The university has no faculties! ";
     }
 }

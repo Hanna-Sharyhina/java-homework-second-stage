@@ -19,6 +19,6 @@ public class GroupHasNoStudentException extends Exception {
 
     @Override
     public String toString() {
-        return "В группе отсутствуют студенты!";
+        return "A group has no students!";
     }
 }

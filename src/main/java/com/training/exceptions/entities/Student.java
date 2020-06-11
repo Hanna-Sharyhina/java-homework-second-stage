@@ -41,8 +41,8 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Студент {" + "имя = '" + name + '\'' +
-                ", оценки = " + grades +
+        return "Student {" + "name = '" + name + '\'' +
+                ", grades = " + grades +
                 "}\n";
     }
 }

@@ -40,7 +40,7 @@ public class University {
 
     @Override
     public String toString() {
-        return "Университет '" + name + "'\n" +
-                "Факультеты: \n" + faculties;
+        return "University '" + name + "'\n" +
+                "Faculties: \n" + faculties;
     }
 }

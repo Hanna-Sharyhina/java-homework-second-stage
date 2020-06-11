@@ -19,7 +19,7 @@ public class StudentHasNoStudySubjectException extends Exception {
 
     @Override
     public String toString() {
-        return "У студента отсутствуют учебные предметы! ";
+        return "A student has no study subjects! ";
     }
 }
 

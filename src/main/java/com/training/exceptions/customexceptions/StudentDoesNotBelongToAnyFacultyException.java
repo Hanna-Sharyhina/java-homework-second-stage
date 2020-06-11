@@ -18,7 +18,7 @@ public class StudentDoesNotBelongToAnyFacultyException extends Exception {
     }
 
     @Override
-    public String toString(){
-        return "Студент не принадлежит ни к одному факультету! ";
+    public String toString() {
+        return "A student does not belong to any faculty! ";
     }
 }

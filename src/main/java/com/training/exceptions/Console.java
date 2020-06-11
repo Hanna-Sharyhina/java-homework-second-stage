@@ -1,9 +1,6 @@
 package com.training.exceptions;
 
-import com.training.exceptions.customexceptions.FacultyHasNoGroupException;
-import com.training.exceptions.customexceptions.GroupHasNoStudentException;
 import com.training.exceptions.customexceptions.StudentHasNoGradesException;
-import com.training.exceptions.customexceptions.UniversityHasNoFacultyException;
 import com.training.exceptions.entities.Faculty;
 import com.training.exceptions.entities.Group;
 import com.training.exceptions.entities.StudySubjects;
@@ -17,7 +14,7 @@ import static com.training.exceptions.entities.StudySubjects.*;
 
 public class Console {
     private static final Logger LOGGER = Logger.getLogger(Console.class.getSimpleName());
-    private static final String FALSE_INPUT = "Ввод осуществлен неверно. Попробуйте повторить. ";
+    private static final String FALSE_INPUT = "False input. Try again, please. ";
     private static String userChosenSubject;
     private static Faculty userChosenFaculty;
     private static Group userChosenGroup;
@@ -25,18 +22,17 @@ public class Console {
     private Calculator calculator = new Calculator();
 
     public void createCriteriaForUserChoice() {
-        String menuForUserChoose = "Введите номер действия, где: \n" +
-                "1 - Посчитать средний балл по всем предметам студента. \n" +
-                "2 - Посчитать средний балл по конкретному предмету в конкретной группе и на конкретном факультете. \n" +
-                "3 - Посчитать средний балл по предмету для всего университета. \n" +
-                "4 - Выход из приложения. \n";
+        String menuForUserChoose = "Enter the number of the action, where: \n" +
+                "1 - Calculate GPA for all study subjects of random student.  \n" +
+                "2 - Calculate GPA for specific study subject in specific group at specific faculty. \n" +
+                "3 - Calculate GPA for specific study subject for the whole university. \n" +
+                "4 - Exit. \n";
         LOGGER.info(menuForUserChoose);
         Scanner scan = new Scanner(System.in);
         criteria = scan.next().trim();
     }
 
     public void runByUserChoice() {
-
         while (true) {
             createCriteriaForUserChoice();
             try {
@@ -51,15 +47,15 @@ public class Console {
                         break;
                     case "3":
                         setUserChosenSubject();
-                        calculator.calcAverageGradeForSpecificStudySubjectAtWholeUniversity(userChosenSubject);
+                        calculator.calcAverageGradeForSpecificStudySubjectForWholeUniversity(userChosenSubject);
                         break;
                     case "4":
                         System.exit(0);
                         break;
                     default:
-                        LOGGER.warning("Неверный ввод. Попробуйте повторить. ");
+                        LOGGER.warning(FALSE_INPUT);
                 }
-            } catch (StudentHasNoGradesException | GroupHasNoStudentException | FacultyHasNoGroupException | UniversityHasNoFacultyException e) {
+            } catch (StudentHasNoGradesException e) {
                 LOGGER.warning(String.valueOf(e));
             }
         }
@@ -69,7 +65,7 @@ public class Console {
         userChosenSubject = null;
         String userInput;
         Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Выберите один из предметов: \n" +
+        LOGGER.info("Choose one of the study subjects, please: \n" +
                 HERBOLOGY.getStudySubjectsName() + ", " + POTIONS.getStudySubjectsName() + ", " +
                 DEFENCE_AGAINST_THE_DARK_ARTS.getStudySubjectsName() + ", " + TRANSFIGURATION.getStudySubjectsName() + ", " +
                 HISTORY_OF_MAGIC.getStudySubjectsName() + ", " + CHARMS.getStudySubjectsName());
@@ -90,7 +86,7 @@ public class Console {
         userChosenFaculty = null;
         String userInput;
         Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Выберите факультет из предложенных :\n" +
+        LOGGER.info("Choose one of the faculties, please :\n" +
                 SLYTHERIN.getFacultyName() + ", " + GRYFFINDOR.getFacultyName() + ", " +
                 RAVENCLAW.getFacultyName() + ", " + HUFFLEPUFF.getFacultyName());
         userInput = scanner.next().trim();
@@ -111,9 +107,9 @@ public class Console {
         setUserChosenFaculty();
         String userInput;
         Scanner scanner = new Scanner(System.in);
-        LOGGER.info("Выберите номер группы из предложенных: \n");
+        LOGGER.info("Choose one of the groups, please: \n");
         for (Group group : userChosenFaculty.getGroups()) {
-            LOGGER.info(group.getName() + " группа");
+            LOGGER.info(group.getName() + " group");
         }
         userInput = scanner.next().trim();
         for (Group group : userChosenFaculty.getGroups()) {

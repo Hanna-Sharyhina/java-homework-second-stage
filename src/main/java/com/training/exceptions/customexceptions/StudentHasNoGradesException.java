@@ -19,6 +19,6 @@ public class StudentHasNoGradesException extends Exception {
 
     @Override
     public String toString() {
-        return "У студента отсутствуют оценки! ";
+        return "A student has no grades! ";
     }
 }

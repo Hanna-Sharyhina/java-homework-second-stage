@@ -47,9 +47,12 @@ public class OptionalTask {
     private static List<String> getSortedNumbers() {
         List<String> sortedNumbers = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePathForRandomNumbers))) {
-            sortedNumbers = reader.lines().mapToInt(Integer::parseInt).boxed().sorted(Integer::compareTo).map(Objects::toString).collect(Collectors.toList());
-        } catch (FileNotFoundException e) {
-            LOGGER.warning(String.valueOf(e));
+            sortedNumbers = reader.lines()
+                    .mapToInt(Integer::parseInt)
+                    .boxed()
+                    .sorted(Integer::compareTo)
+                    .map(Objects::toString)
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             LOGGER.warning(String.valueOf(e));
         }
@@ -60,8 +63,6 @@ public class OptionalTask {
         List<String> linesFromFile = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(PATH_TO_GENERAL_DIRECTORY_WITH_RESOURCES + "OriginalDataForI&O.java"))) {
             reader.lines().forEach(linesFromFile::add);
-        } catch (FileNotFoundException e) {
-            LOGGER.warning(String.valueOf(e));
         } catch (IOException e) {
             LOGGER.warning(String.valueOf(e));
         }
@@ -70,13 +71,17 @@ public class OptionalTask {
 
     private static List<String> getChangedLinesWithJustPrivateObjects() {
         List<String> changedLines;
-        changedLines = getLinesFromJavaFile().stream().map(s -> s.replace("public", "private")).collect(Collectors.toList());
+        changedLines = getLinesFromJavaFile().stream()
+                .map(s -> s.replace("public", "private"))
+                .collect(Collectors.toList());
         return changedLines;
     }
 
     private static List<String> getChangedLinesWithReverseOrderOfChars() {
         List<String> changedLines;
-        changedLines = getLinesFromJavaFile().stream().map(s -> new StringBuffer(s).reverse().toString()).collect(Collectors.toList());
+        changedLines = getLinesFromJavaFile().stream()
+                .map(s -> new StringBuffer(s).reverse().toString())
+                .collect(Collectors.toList());
         return changedLines;
     }
 }

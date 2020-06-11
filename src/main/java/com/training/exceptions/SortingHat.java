@@ -4,7 +4,6 @@ import com.training.exceptions.customexceptions.*;
 import com.training.exceptions.entities.*;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -17,17 +16,11 @@ public class SortingHat {
     private Random random = new Random();
     private static final Logger LOGGER = Logger.getLogger(SortingHat.class.getSimpleName());
     private static List<String> allStudentNames = new ArrayList<>();
-    private List<String> slytherinNames = new ArrayList<>();
-    private List<String> griffindorNames = new ArrayList<>();
-    private List<String> hufflepuffNames = new ArrayList<>();
-    private List<String> ravenclawNames = new ArrayList<>();
 
     public void getAllNamesFromFile() throws StudentDoesNotBelongToAnyFacultyException {
         try (BufferedReader reader
                      = new BufferedReader(new FileReader("src\\main\\resources\\StudentNames.txt"))) {
             reader.lines().forEach(allStudentNames::add);
-        } catch (FileNotFoundException e) {
-            LOGGER.warning(String.valueOf(e));
         } catch (IOException e) {
             LOGGER.warning(String.valueOf(e));
         }
@@ -36,29 +29,14 @@ public class SortingHat {
         }
     }
 
-    public void addNamesToEachFaculty() {
+    private List<String> getListWithStudentNamesForRandomFaculty(FacultyNames facultyName) {
         try {
             getAllNamesFromFile();
         } catch (StudentDoesNotBelongToAnyFacultyException e) {
             LOGGER.warning(String.valueOf(e));
         }
-        slytherinNames = allStudentNames.stream()
-                .filter(s -> s.contains(SLYTHERIN.toString()))
-                .map(s -> s.split("/"))
-                .map(strings -> strings[0])
-                .collect(Collectors.toList());
-        griffindorNames = allStudentNames.stream()
-                .filter(s -> s.contains(GRYFFINDOR.toString()))
-                .map(s -> s.split("/"))
-                .map(strings -> strings[0])
-                .collect(Collectors.toList());
-        hufflepuffNames = allStudentNames.stream()
-                .filter(s -> s.contains(HUFFLEPUFF.toString()))
-                .map(s -> s.split("/"))
-                .map(strings -> strings[0])
-                .collect(Collectors.toList());
-        ravenclawNames = allStudentNames.stream()
-                .filter(s -> s.contains(RAVENCLAW.toString()))
+        return allStudentNames.stream()
+                .filter(s -> s.contains(facultyName.toString()))
                 .map(s -> s.split("/"))
                 .map(strings -> strings[0])
                 .collect(Collectors.toList());
@@ -123,10 +101,10 @@ public class SortingHat {
     public List<Faculty> addFacultiesToUniversity() throws UniversityHasNoFacultyException {
         List<Faculty> allFaculties = new ArrayList<>();
         try {
-            allFaculties.add(getRandomFaculty(slytherinNames, SLYTHERIN));
-            allFaculties.add(getRandomFaculty(griffindorNames, GRYFFINDOR));
-            allFaculties.add(getRandomFaculty(ravenclawNames, RAVENCLAW));
-            allFaculties.add(getRandomFaculty(hufflepuffNames, HUFFLEPUFF));
+            allFaculties.add(getRandomFaculty(getListWithStudentNamesForRandomFaculty(SLYTHERIN), SLYTHERIN));
+            allFaculties.add(getRandomFaculty(getListWithStudentNamesForRandomFaculty(GRYFFINDOR), GRYFFINDOR));
+            allFaculties.add(getRandomFaculty(getListWithStudentNamesForRandomFaculty(RAVENCLAW), RAVENCLAW));
+            allFaculties.add(getRandomFaculty(getListWithStudentNamesForRandomFaculty(HUFFLEPUFF), HUFFLEPUFF));
         } catch (FacultyHasNoGroupException e) {
             LOGGER.warning(e.toString());
         }
@@ -137,13 +115,12 @@ public class SortingHat {
     }
 
     public University createUniversity() {
-        addNamesToEachFaculty();
         List<Faculty> faculties = null;
         try {
             faculties = addFacultiesToUniversity();
         } catch (UniversityHasNoFacultyException e) {
             LOGGER.warning(e.toString());
         }
-        return new University("Хогвартс", faculties);
+        return new University("Hogwarts", faculties);
     }
 }

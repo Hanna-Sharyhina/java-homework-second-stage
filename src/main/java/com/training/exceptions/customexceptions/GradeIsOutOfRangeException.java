@@ -19,6 +19,6 @@ public class GradeIsOutOfRangeException extends Exception {
 
     @Override
     public String toString() {
-        return "Оценка вне допустимого диапазона! ";
+        return "A grade is out of range! ";
     }
 }

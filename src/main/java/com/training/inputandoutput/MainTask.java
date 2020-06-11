@@ -13,18 +13,20 @@ import java.util.stream.Stream;
 public class MainTask {
     private static final Logger LOGGER = Logger.getLogger(MainTask.class.getSimpleName());
     private static final String PATH_TO_GENERAL_DIRECTORY = "src" + File.separator + "main" + File.separator + "resources" + File.separator;
-    private static File mainTaskData = new File(PATH_TO_GENERAL_DIRECTORY + File.separator + "MainTaskData");
+    private static File mainTaskData = new File(PATH_TO_GENERAL_DIRECTORY + File.separator + "MainTaskData.txt");
     private static String mainTaskDataPath = mainTaskData.getPath();
     private static final String ADDITIONAL_CHARS_FOR_DIRECTORY_LINES = "  |----";
     private static final String ADDITIONAL_CHARS_FOR_FILE_LINES = "  |    ";
     private static DecimalFormat formattedDouble = new DecimalFormat("#0");
 
     public static void main(String[] args) {
-        File commandLineArgumentWithDirectoryPath = new File(args[0]);
-        File commandLineArgumentWithDataFilePath = new File(args[1]);
-        if (commandLineArgumentWithDirectoryPath.exists()) {
-            try (Stream<Path> filePathStream = Files.walk(Paths.get(commandLineArgumentWithDirectoryPath.getPath()))) {
-                writeDataToFile(commandLineArgumentWithDirectoryPath.getName(), mainTaskDataPath);
+        File commandLineArgument = new File(args[0]);
+        if (!commandLineArgument.exists()) {
+            LOGGER.warning("Path is incorrect");
+        }
+        if (commandLineArgument.isDirectory()) {
+            writeDataToFile(commandLineArgument.getName(), mainTaskDataPath);
+            try (Stream<Path> filePathStream = Files.walk(Paths.get(commandLineArgument.getPath()))) {
                 filePathStream
                         .map(Path::toFile)
                         .skip(1)
@@ -39,12 +41,7 @@ public class MainTask {
                 LOGGER.warning(String.valueOf(e));
             }
         } else {
-            LOGGER.warning("Path is incorrect");
-        }
-        if (commandLineArgumentWithDataFilePath.exists()) {
-            calcSomeFileInfo(getDataFromFile(commandLineArgumentWithDataFilePath));
-        } else {
-            LOGGER.warning("File isn't exist");
+            calcSomeFileInfo(getDataFromFile(commandLineArgument));
         }
     }
 
@@ -61,8 +58,6 @@ public class MainTask {
         List<String> dataFromFile = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             reader.lines().forEach(dataFromFile::add);
-        } catch (FileNotFoundException e) {
-            LOGGER.warning(String.valueOf(e));
         } catch (IOException e) {
             LOGGER.warning(String.valueOf(e));
         }
@@ -78,9 +73,9 @@ public class MainTask {
         if (amountOfFiles != 0) {
             averageAmountOfFilesPerFolder = amountOfFiles / amountOfFolders;
         }
-        String message = "В данной директории находится : " + amountOfFolders + " папок, " + amountOfFiles + " файлов, " +
-                "\n Среднее количество файлов в папке = " + averageAmountOfFilesPerFolder +
-                ".\n Средняя длина названия файла = " + formattedDouble.format(averageFileNameLength) + " символ(а/ов).";
+        String message = "This directory has : " + amountOfFolders + " folders, " + amountOfFiles + " files, " +
+                "\n Average number of files in a folder = " + averageAmountOfFilesPerFolder +
+                ".\n Average length of the file name = " + formattedDouble.format(averageFileNameLength) + " chars.";
         LOGGER.info(message);
     }
 }

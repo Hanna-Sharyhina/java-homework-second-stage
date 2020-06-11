@@ -40,6 +40,6 @@ public class Group {
 
     @Override
     public String toString() {
-        return "Группа '" + name + " курс" + "'\n" + students;
+        return name + " group" + "'\n" + students;
     }
 }

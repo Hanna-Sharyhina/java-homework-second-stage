@@ -1,16 +1,15 @@
 package com.training.exceptions;
 
-import com.training.exceptions.customexceptions.FacultyHasNoGroupException;
-import com.training.exceptions.customexceptions.GroupHasNoStudentException;
 import com.training.exceptions.customexceptions.StudentHasNoGradesException;
-import com.training.exceptions.customexceptions.UniversityHasNoFacultyException;
 import com.training.exceptions.entities.Faculty;
 import com.training.exceptions.entities.Group;
 import com.training.exceptions.entities.Student;
 import com.training.exceptions.entities.University;
 
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 
 public class Calculator {
@@ -18,24 +17,19 @@ public class Calculator {
     protected static University university = sortingHat.createUniversity();
     private static final Logger LOGGER = Logger.getLogger(Calculator.class.getSimpleName());
     private DecimalFormat formattedDouble = new DecimalFormat("#0.00");
+    private Random random = new Random();
 
-    public void calcRandomStudentAverageGrade() throws StudentHasNoGradesException, UniversityHasNoFacultyException, FacultyHasNoGroupException, GroupHasNoStudentException {
-        Faculty randomFaculty = university.getFaculties().stream()
-                .findAny()
-                .orElseThrow(UniversityHasNoFacultyException::new);
-        Group randomGroup = randomFaculty.getGroups().stream()
-                .findAny()
-                .orElseThrow(FacultyHasNoGroupException::new);
-        Student randomStudent = randomGroup.getStudents().stream()
-                .findAny()
-                .orElseThrow(GroupHasNoStudentException::new);
+    public void calcRandomStudentAverageGrade() throws StudentHasNoGradesException {
+        Faculty randomFaculty = university.getFaculties().get(random.nextInt(university.getFaculties().size()));
+        Group randomGroup = randomFaculty.getGroups().get(random.nextInt(randomFaculty.getGroups().size()));
+        Student randomStudent = randomGroup.getStudents().get(random.nextInt(randomGroup.getStudents().size()));
         double averageGrade = randomStudent.getGrades().values().stream()
                 .flatMap(Collection::stream)
                 .mapToInt(p -> p).average()
                 .orElseThrow(StudentHasNoGradesException::new);
-        String message = "Студент " + randomStudent.getName() + " группы " + randomGroup.getName() + " курса "
-                + randomFaculty.getName().getFacultyName() + " имеет средний балл: " + formattedDouble.format(averageGrade)
-                + ", его оценки:\n" + randomStudent.getGrades();
+        String message = "The group " + randomGroup.getName() + " " + randomFaculty.getName().getFacultyName() +
+                " student " + randomStudent.getName() + " has average grade: " + formattedDouble.format(averageGrade) +
+                ", his grades:\n" + randomStudent.getGrades();
         LOGGER.info(message);
     }
 
@@ -47,13 +41,13 @@ public class Calculator {
                 .flatMap(Collection::stream)
                 .flatMap(Collection::stream)
                 .mapToInt(p -> p).average().orElseThrow(StudentHasNoGradesException::new);
-        String message = "Средняя оценка в группе " + userChosenGroup.getName() + " " + userChosenFaculty.getName().getFacultyName() +
-                " по предмету " + userChosenSubject + " равна: " + formattedDouble.format(averageGrade);
+        String message = "Average grade in group " + userChosenGroup.getName() + " " + userChosenFaculty.getName().getFacultyName() +
+                " for " + userChosenSubject + " study subject is: " + formattedDouble.format(averageGrade);
         LOGGER.info(message);
 
     }
 
-    public void calcAverageGradeForSpecificStudySubjectAtWholeUniversity(String userChosenSubject) throws StudentHasNoGradesException {
+    public void calcAverageGradeForSpecificStudySubjectForWholeUniversity(String userChosenSubject) throws StudentHasNoGradesException {
         double averageGrade = university.getFaculties().stream()
                 .map(Faculty::getGroups)
                 .flatMap(Collection::stream)
@@ -65,7 +59,7 @@ public class Calculator {
                 .flatMap(Collection::stream)
                 .flatMap(Collection::stream)
                 .mapToInt(p -> p).average().orElseThrow(StudentHasNoGradesException::new);
-        String message = "Средняя оценка по предмету '" + userChosenSubject + "' для всего университета равна: " + formattedDouble.format(averageGrade);
+        String message = "Average grade for '" + userChosenSubject + "' study subject for whole university is: " + formattedDouble.format(averageGrade);
         LOGGER.info(message);
     }
 }
