@@ -24,17 +24,13 @@ public class SortingHat {
         } catch (IOException e) {
             LOGGER.warning(String.valueOf(e));
         }
-        if (!allStudentNames.stream().allMatch(s -> s.contains(GRYFFINDOR.toString()) || s.contains(RAVENCLAW.toString()) || s.contains(HUFFLEPUFF.toString()) || s.contains(SLYTHERIN.toString()))) {
+        if (!allStudentNames.stream()
+                .allMatch(s -> Arrays.stream(FacultyNames.class.getEnumConstants()).anyMatch(enumValue -> s.contains(enumValue.toString())))) {
             throw new StudentDoesNotBelongToAnyFacultyException();
         }
     }
 
     private List<String> getListWithStudentNamesForRandomFaculty(FacultyNames facultyName) {
-        try {
-            getAllNamesFromFile();
-        } catch (StudentDoesNotBelongToAnyFacultyException e) {
-            LOGGER.warning(String.valueOf(e));
-        }
         return allStudentNames.stream()
                 .filter(s -> s.contains(facultyName.toString()))
                 .map(s -> s.split("/"))
@@ -99,6 +95,11 @@ public class SortingHat {
     }
 
     public List<Faculty> addFacultiesToUniversity() throws UniversityHasNoFacultyException {
+        try {
+            getAllNamesFromFile();
+        } catch (StudentDoesNotBelongToAnyFacultyException e) {
+            LOGGER.warning(String.valueOf(e));
+        }
         List<Faculty> allFaculties = new ArrayList<>();
         try {
             allFaculties.add(getRandomFaculty(getListWithStudentNamesForRandomFaculty(SLYTHERIN), SLYTHERIN));
